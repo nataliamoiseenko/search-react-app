@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { TbLoaderQuarter } from 'react-icons/tb';
 import './App.css';
 import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
@@ -13,58 +13,54 @@ type AppState = {
   isLoading: boolean;
 };
 
-class App extends React.Component<Record<string, never>, AppState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = {
-      input: localStorage.getItem(LOCAL_STORAGE_TITLE) || '',
-      option: API_OPTIONS[0],
-      result: null,
-      isLoading: false,
-    };
-  }
+const App = () => {
+  const [appState, setAppState] = useState<AppState>({
+    input: localStorage.getItem(LOCAL_STORAGE_TITLE) || '',
+    option: API_OPTIONS[0],
+    result: null,
+    isLoading: false,
+  });
 
-  updateInput = (e: ChangeEvent) =>
-    this.setState({ input: (e.target as HTMLInputElement).value });
+  const updateInput = (e: ChangeEvent) =>
+    setAppState({ ...appState, input: (e.target as HTMLInputElement).value });
 
-  sendSearchRequest = async () => {
-    this.setState({ isLoading: true });
-    localStorage.setItem(LOCAL_STORAGE_TITLE, this.state.input);
+  const sendSearchRequest = async () => {
+    setAppState({ ...appState, isLoading: true });
+    localStorage.setItem(LOCAL_STORAGE_TITLE, appState.input);
     const result = await fetch(
-      `${BASE_URL}/${this.state.option}/?search=${this.state.input}`
+      `${BASE_URL}/${appState.option}/?search=${appState.input}`
     );
     const searchResult = await result.json();
-    this.setState({
+    setAppState({
+      ...appState,
       input: '',
       result: searchResult.results,
       isLoading: false,
     });
   };
 
-  onChangeHandler = (e: ChangeEvent) =>
-    this.setState({ option: (e.target as HTMLSelectElement).value });
+  const onChangeHandler = (e: ChangeEvent) =>
+    setAppState({ ...appState, option: (e.target as HTMLSelectElement).value });
 
-  render() {
-    return (
-      <>
-        <Header />
-        <div className="container">
-          <div className={this.state.isLoading ? 'blured' : ''}>
-            <SearchForm
-              input={this.state.input}
-              updateInput={this.updateInput}
-              sendSearchRequest={this.sendSearchRequest}
-              onChangeHandler={this.onChangeHandler}
-              isLoading={this.state.isLoading}
-            />
-            <ResultsList result={this.state.result} />
-          </div>
-
-          {this.state.isLoading && <TbLoaderQuarter className="loader-icon" />}
+  return (
+    <>
+      <Header />
+      <div className="container">
+        <div className={appState.isLoading ? 'blured' : ''}>
+          <SearchForm
+            input={appState.input}
+            updateInput={updateInput}
+            sendSearchRequest={sendSearchRequest}
+            onChangeHandler={onChangeHandler}
+            isLoading={appState.isLoading}
+          />
+          <ResultsList result={appState.result} />
         </div>
-      </>
-    );
-  }
-}
+
+        {appState.isLoading && <TbLoaderQuarter className="loader-icon" />}
+      </div>
+    </>
+  );
+};
 
 export default App;
