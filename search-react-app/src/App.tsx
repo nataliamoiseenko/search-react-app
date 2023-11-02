@@ -6,58 +6,91 @@ import Header from './components/Header';
 import ResultsList from './components/ResultsList';
 import SearchForm from './components/SearchForm';
 
-type AppState = {
+type SearchState = {
+  result: [] | null;
+  count: number | null;
+  next: string | null;
+  previous: string | null;
+};
+
+type FormState = {
   input: string;
   option: string;
-  result: [] | null;
-  isLoading: boolean;
 };
 
 const App = () => {
-  const [appState, setAppState] = useState<AppState>({
+  const [formState, setFormState] = useState<FormState>({
     input: localStorage.getItem(LOCAL_STORAGE_TITLE) || '',
     option: API_OPTIONS[0],
+  });
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [searchState, setSearchState] = useState<SearchState>({
     result: null,
-    isLoading: false,
+    count: null,
+    next: null,
+    previous: null,
   });
 
   const updateInput = (e: ChangeEvent) =>
-    setAppState({ ...appState, input: (e.target as HTMLInputElement).value });
+    setFormState({ ...formState, input: (e.target as HTMLInputElement).value });
 
-  const sendSearchRequest = async () => {
-    setAppState({ ...appState, isLoading: true });
-    localStorage.setItem(LOCAL_STORAGE_TITLE, appState.input);
-    const result = await fetch(
-      `${BASE_URL}/${appState.option}/?search=${appState.input}`
+  const sendSearchRequest = async (requestUrl: string | null = null) => {
+    setLoading(true);
+    if (!requestUrl) localStorage.setItem(LOCAL_STORAGE_TITLE, formState.input);
+
+    const response = await fetch(
+      `${
+        requestUrl
+          ? requestUrl
+          : `${BASE_URL}/${formState.option}/?search=${formState.input}`
+      }`
     );
-    const searchResult = await result.json();
-    setAppState({
-      ...appState,
+    const { results: result, count, next, previous } = await response.json();
+    setFormState({
+      ...formState,
       input: '',
-      result: searchResult.results,
-      isLoading: false,
+    });
+
+    setLoading(false);
+
+    setSearchState({
+      result,
+      count,
+      next,
+      previous,
     });
   };
 
   const onChangeHandler = (e: ChangeEvent) =>
-    setAppState({ ...appState, option: (e.target as HTMLSelectElement).value });
+    setFormState({
+      ...formState,
+      option: (e.target as HTMLSelectElement).value,
+    });
 
   return (
     <>
       <Header />
       <div className="container">
-        <div className={appState.isLoading ? 'blured' : ''}>
+        <div className={loading ? 'blured' : ''}>
           <SearchForm
-            input={appState.input}
+            input={formState.input}
             updateInput={updateInput}
             sendSearchRequest={sendSearchRequest}
             onChangeHandler={onChangeHandler}
-            isLoading={appState.isLoading}
+            isLoading={loading}
           />
-          <ResultsList result={appState.result} />
+
+          <ResultsList
+            result={searchState.result}
+            next={searchState.next}
+            previous={searchState.previous}
+            paginationHandler={sendSearchRequest}
+          />
         </div>
 
-        {appState.isLoading && <TbLoaderQuarter className="loader-icon" />}
+        {loading && <TbLoaderQuarter className="loader-icon" />}
       </div>
     </>
   );
