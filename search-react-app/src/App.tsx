@@ -1,10 +1,11 @@
 import { ChangeEvent, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { TbLoaderQuarter } from 'react-icons/tb';
-import './App.css';
 import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
 import Header from './components/Header';
 import ResultsList from './components/ResultsList';
 import SearchForm from './components/SearchForm';
+import './App.css';
 
 type SearchState = {
   result: [] | null;
@@ -33,6 +34,8 @@ const App = () => {
     previous: null,
   });
 
+  const [_searchParams, setSearchParams] = useSearchParams();
+
   const updateInput = (e: ChangeEvent) =>
     setFormState({ ...formState, input: (e.target as HTMLInputElement).value });
 
@@ -40,13 +43,14 @@ const App = () => {
     setLoading(true);
     if (!requestUrl) localStorage.setItem(LOCAL_STORAGE_TITLE, formState.input);
 
-    const response = await fetch(
-      `${
-        requestUrl
-          ? requestUrl
-          : `${BASE_URL}/${formState.option}/?search=${formState.input}`
-      }`
-    );
+    const requestUrlString = requestUrl
+      ? requestUrl
+      : `${BASE_URL}/${formState.option}/?search=${formState.input}`;
+
+    const queryParamsObj = new URLSearchParams(requestUrlString.split('?')[1]);
+    setSearchParams(queryParamsObj);
+
+    const response = await fetch(requestUrlString);
     const { results: result, count, next, previous } = await response.json();
     setFormState({
       ...formState,
