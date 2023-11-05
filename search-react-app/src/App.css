@@ -8,7 +8,7 @@
 }
 
 .header__logo {
-  position: fixed;
+  position: absolute;
   top: 30px;
   right: 30px;
   display: block;
@@ -73,6 +73,7 @@ ul li {
 
 .result-list__container {
   width: 100%;
+  max-width: 600px;
 }
 
 @keyframes rotating {
@@ -138,6 +139,7 @@ ul li {
 .result__container {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   gap: 20px;
 }
 
@@ -147,6 +149,7 @@ ul li {
 
 .detail {
   position: relative;
+  margin-bottom: 30px;
   padding: 76px 16px 16px;
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;

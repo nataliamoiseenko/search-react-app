@@ -36,7 +36,6 @@ const ResultsList = ({
     ) : result ? (
       <>
         <p>No results</p>
-        <pre>:(</pre>
       </>
     ) : (
       <p>Start searching</p>
