@@ -1,4 +1,5 @@
 #root {
+  width: 100%;
   max-width: 1280px;
   min-width: 450px;
   padding: 0 20px;
@@ -70,6 +71,10 @@ ul li {
   list-style-type: none;
 }
 
+.result-list__container {
+  width: 100%;
+}
+
 @keyframes rotating {
   from {
     -ms-transform: rotate(0deg);
@@ -89,6 +94,7 @@ ul li {
 
 .pagination__container {
   margin: 0 auto;
+  margin-bottom: 30px;
   width: 200px;
   display: flex;
   justify-content: space-between;
@@ -105,4 +111,67 @@ ul li {
   padding: 0.75em 1.35em;
   color: #a64300;
   background-color: #f4f4f4;
+}
+
+.result__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.result__button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.5em 0.8em;
+  font-weight: 400;
+  color: #213547;
+  background-color: transparent;
+  border: none;
+}
+
+.result__button:hover {
+  text-decoration: underline;
+}
+
+.result__container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.result__container._open > div {
+  flex-basis: 50%;
+}
+
+.detail {
+  position: relative;
+  padding: 60px 16px 16px;
+}
+
+.detail__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}
+
+.detail__left {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.detail__right {
+  margin-left: 12px;
+  font-size: 0.9rem;
+  text-align: justify;
+}
+
+.detail__button {
+  position: absolute;
+  top: 0px;
+  right: 16px;
+  border-radius: 50%;
+  padding: 0.75em 1em;
+  color: #a64300;
 }

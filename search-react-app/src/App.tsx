@@ -5,6 +5,7 @@ import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
 import Header from './components/Header';
 import ResultsList from './components/ResultsList';
 import SearchForm from './components/SearchForm';
+import DetailedInfo from './components/DetailedInfo';
 import './App.css';
 
 type SearchState = {
@@ -34,6 +35,11 @@ const App = () => {
     previous: null,
   });
 
+  const [detailedInfo, setDetailedInfo] = useState({
+    isOpen: false,
+    data: {},
+  });
+
   const [_searchParams, setSearchParams] = useSearchParams();
 
   const updateInput = (e: ChangeEvent) =>
@@ -41,6 +47,7 @@ const App = () => {
 
   const sendSearchRequest = async (requestUrl: string | null = null) => {
     setLoading(true);
+    setDetailedInfo({ isOpen: false, data: {} });
     if (!requestUrl) localStorage.setItem(LOCAL_STORAGE_TITLE, formState.input);
 
     const requestUrlString = requestUrl
@@ -67,6 +74,17 @@ const App = () => {
     });
   };
 
+  const getDetailedInfo = async (url: string) => {
+    setLoading(true);
+    const response = await fetch(url);
+    const processedResponse = await response.json();
+    setDetailedInfo({
+      isOpen: true,
+      data: processedResponse,
+    });
+    setLoading(false);
+  };
+
   const onChangeHandler = (e: ChangeEvent) =>
     setFormState({
       ...formState,
@@ -86,12 +104,26 @@ const App = () => {
             isLoading={loading}
           />
 
-          <ResultsList
-            result={searchState.result}
-            next={searchState.next}
-            previous={searchState.previous}
-            paginationHandler={sendSearchRequest}
-          />
+          <div
+            className={`result__container ${
+              detailedInfo.isOpen ? '_open' : ''
+            }`}
+          >
+            <ResultsList
+              result={searchState.result}
+              next={searchState.next}
+              previous={searchState.previous}
+              sendSearchRequest={sendSearchRequest}
+              getDetailedInfo={getDetailedInfo}
+            />
+
+            {detailedInfo.isOpen && (
+              <DetailedInfo
+                setDetailedInfo={setDetailedInfo}
+                detailedInfo={detailedInfo.data}
+              />
+            )}
+          </div>
         </div>
 
         {loading && <TbLoaderQuarter className="loader-icon" />}

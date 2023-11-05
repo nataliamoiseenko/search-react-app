@@ -1,33 +1,38 @@
 import Pagination from './Pagination';
+import ResultItem from './ResultItem';
 
 type ResultsListProps = {
   result: [] | null;
   next: string | null;
   previous: string | null;
-  paginationHandler: (requestUrl: string | null) => void;
+  sendSearchRequest: (requestUrl: string | null) => void;
+  getDetailedInfo: (requestUrl: string) => void;
 };
 
 const ResultsList = ({
   result,
   next,
   previous,
-  paginationHandler,
+  sendSearchRequest,
+  getDetailedInfo,
 }: ResultsListProps) => (
   <>
     {result && result.length > 0 ? (
-      <>
+      <div className="result-list__container">
         <ul className="result-list">
-          {result.map((el: { name?: string; title?: string }, i) => (
-            <li key={i}>{el.name || el.title}</li>
-          ))}
+          {result.map(
+            (el: { name?: string; title?: string; url: string }, i) => (
+              <ResultItem key={i} item={el} getDetailedInfo={getDetailedInfo} />
+            )
+          )}
         </ul>
 
         <Pagination
           next={next}
           previous={previous}
-          paginationHandler={paginationHandler}
+          paginationHandler={sendSearchRequest}
         />
-      </>
+      </div>
     ) : result ? (
       <>
         <p>No results</p>
