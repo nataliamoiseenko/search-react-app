@@ -147,7 +147,9 @@ ul li {
 
 .detail {
   position: relative;
-  padding: 60px 16px 16px;
+  padding: 76px 16px 16px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
 }
 
 .detail__row {
@@ -169,7 +171,7 @@ ul li {
 
 .detail__button {
   position: absolute;
-  top: 0px;
+  top: 16px;
   right: 16px;
   border-radius: 50%;
   padding: 0.75em 1em;

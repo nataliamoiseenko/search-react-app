@@ -47,7 +47,6 @@ const App = () => {
 
   const sendSearchRequest = async (requestUrl: string | null = null) => {
     setLoading(true);
-    setDetailedInfo({ isOpen: false, data: {} });
     if (!requestUrl) localStorage.setItem(LOCAL_STORAGE_TITLE, formState.input);
 
     const requestUrlString = requestUrl
