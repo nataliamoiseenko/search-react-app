@@ -1,3 +1,9 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -29,16 +35,23 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-image: url('./assets/bg-image.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 h1 {
-  font-size: 3.2em;
+  margin-bottom: 40px;
+  padding: 10px 15px;
+  font-size: 2em;
   line-height: 1.1;
+  background-color: #ffffff;
+  border-radius: 8px;
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -48,7 +61,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #a64300;
 }
 button:focus,
 button:focus-visible {
@@ -64,6 +77,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f4f4f4;
   }
 }
