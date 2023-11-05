@@ -40,7 +40,7 @@ const App = () => {
     data: {},
   });
 
-  const [_searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const updateInput = (e: ChangeEvent) =>
     setFormState({ ...formState, input: (e.target as HTMLInputElement).value });
@@ -75,6 +75,9 @@ const App = () => {
 
   const getDetailedInfo = async (url: string) => {
     setLoading(true);
+    searchParams.append('detail', 'true');
+    setSearchParams(searchParams);
+
     const response = await fetch(url);
     const processedResponse = await response.json();
     setDetailedInfo({
@@ -82,6 +85,12 @@ const App = () => {
       data: processedResponse,
     });
     setLoading(false);
+  };
+
+  const closeDetailedInfo = () => {
+    setDetailedInfo({ isOpen: false, data: {} });
+    searchParams.delete('detail', 'true');
+    setSearchParams(searchParams);
   };
 
   const onChangeHandler = (e: ChangeEvent) =>
@@ -118,7 +127,7 @@ const App = () => {
 
             {detailedInfo.isOpen && (
               <DetailedInfo
-                setDetailedInfo={setDetailedInfo}
+                closeDetailedInfo={closeDetailedInfo}
                 detailedInfo={detailedInfo.data}
               />
             )}

@@ -1,17 +1,20 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 type DetailedInfoProps = {
-  setDetailedInfo: Dispatch<SetStateAction<{ isOpen: boolean; data: object }>>;
+  closeDetailedInfo: () => void;
   detailedInfo: Record<string, never | string | []>;
 };
 
-const DetailedInfo = ({ setDetailedInfo, detailedInfo }: DetailedInfoProps) => {
+const DetailedInfo = ({
+  closeDetailedInfo,
+  detailedInfo,
+}: DetailedInfoProps) => {
   useEffect(() => {
     const listener = (event: MouseEvent) => {
       if (detailContainer.current?.contains(event.target as Element)) return;
 
-      setDetailedInfo({ isOpen: false, data: {} });
+      closeDetailedInfo();
     };
 
     document.addEventListener('mousedown', listener);
@@ -19,16 +22,13 @@ const DetailedInfo = ({ setDetailedInfo, detailedInfo }: DetailedInfoProps) => {
     return () => {
       document.removeEventListener('mousedown', listener);
     };
-  }, [setDetailedInfo]);
+  }, [closeDetailedInfo]);
 
   const detailContainer = useRef<HTMLDivElement>(null);
 
   return (
     <div className="detail" ref={detailContainer}>
-      <button
-        className="detail__button"
-        onClick={() => setDetailedInfo({ isOpen: false, data: {} })}
-      >
+      <button className="detail__button" onClick={closeDetailedInfo}>
         <AiOutlineClose />
       </button>
 
