@@ -1,14 +1,18 @@
+import { useContext } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { AiOutlineArrowRight } from 'react-icons/ai';
+import { DataContext } from '../App';
 import '../App.css';
 
 type PaginationProps = {
-  next: string | null;
-  previous: string | null;
   paginationHandler: (requestUrl: string | null) => void;
 };
 
-const Pagination = ({ next, previous, paginationHandler }: PaginationProps) => {
+const Pagination = ({ paginationHandler }: PaginationProps) => {
+  const {
+    searchState: { next, previous },
+  } = useContext(DataContext);
+
   return (
     <div className="pagination__container">
       <button

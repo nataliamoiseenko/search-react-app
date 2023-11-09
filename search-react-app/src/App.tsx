@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, createContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TbLoaderQuarter } from 'react-icons/tb';
 import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
@@ -19,6 +19,15 @@ type FormState = {
   input: string;
   option: string;
 };
+
+type DataContextType = {
+  formState: FormState;
+  searchState: SearchState;
+};
+
+export const DataContext = createContext<DataContextType>(
+  {} as DataContextType
+);
 
 const App = () => {
   const [formState, setFormState] = useState<FormState>({
@@ -101,41 +110,39 @@ const App = () => {
 
   return (
     <>
-      <Header />
-      <div className="container">
-        <div className={loading ? 'blured' : ''}>
-          <SearchForm
-            input={formState.input}
-            updateInput={updateInput}
-            sendSearchRequest={sendSearchRequest}
-            onChangeHandler={onChangeHandler}
-            isLoading={loading}
-          />
-
-          <div
-            className={`result__container ${
-              detailedInfo.isOpen ? '_open' : ''
-            }`}
-          >
-            <ResultsList
-              result={searchState.result}
-              next={searchState.next}
-              previous={searchState.previous}
+      <DataContext.Provider value={{ formState, searchState }}>
+        <Header />
+        <div className="container">
+          <div className={loading ? 'blured' : ''}>
+            <SearchForm
+              updateInput={updateInput}
               sendSearchRequest={sendSearchRequest}
-              getDetailedInfo={getDetailedInfo}
+              onChangeHandler={onChangeHandler}
+              isLoading={loading}
             />
 
-            {detailedInfo.isOpen && (
-              <DetailedInfo
-                closeDetailedInfo={closeDetailedInfo}
-                detailedInfo={detailedInfo.data}
+            <div
+              className={`result__container ${
+                detailedInfo.isOpen ? '_open' : ''
+              }`}
+            >
+              <ResultsList
+                sendSearchRequest={sendSearchRequest}
+                getDetailedInfo={getDetailedInfo}
               />
-            )}
-          </div>
-        </div>
 
-        {loading && <TbLoaderQuarter className="loader-icon" />}
-      </div>
+              {detailedInfo.isOpen && (
+                <DetailedInfo
+                  closeDetailedInfo={closeDetailedInfo}
+                  detailedInfo={detailedInfo.data}
+                />
+              )}
+            </div>
+          </div>
+
+          {loading && <TbLoaderQuarter className="loader-icon" />}
+        </div>
+      </DataContext.Provider>
     </>
   );
 };
