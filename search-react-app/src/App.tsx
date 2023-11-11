@@ -6,24 +6,8 @@ import Header from './components/Header';
 import ResultsList from './components/ResultsList';
 import SearchForm from './components/SearchForm';
 import DetailedInfo from './components/DetailedInfo';
+import { DataContextType, FormState, SearchState } from './types';
 import './App.css';
-
-type SearchState = {
-  result: [] | null;
-  count: number | null;
-  next: string | null;
-  previous: string | null;
-};
-
-type FormState = {
-  input: string;
-  option: string;
-};
-
-type DataContextType = {
-  formState: FormState;
-  searchState: SearchState;
-};
 
 export const DataContext = createContext<DataContextType>(
   {} as DataContextType

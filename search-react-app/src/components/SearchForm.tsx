@@ -1,15 +1,9 @@
-import { ChangeEvent, SyntheticEvent, useContext } from 'react';
+import { SyntheticEvent, useContext } from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 import '../App.css';
 import { API_OPTIONS } from '../consts';
 import { DataContext } from '../App';
-
-type SearchFormProps = {
-  updateInput: (e: ChangeEvent) => void;
-  sendSearchRequest: () => void;
-  onChangeHandler: (e: ChangeEvent) => void;
-  isLoading: boolean;
-};
+import { SearchFormProps } from '../types';
 
 const SearchForm = ({
   updateInput,

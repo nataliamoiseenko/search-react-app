@@ -2,11 +2,7 @@ import { useContext } from 'react';
 import Pagination from './Pagination';
 import ResultItem from './ResultItem';
 import { DataContext } from '../App';
-
-type ResultsListProps = {
-  sendSearchRequest: (requestUrl: string | null) => void;
-  getDetailedInfo: (requestUrl: string) => void;
-};
+import { ResultsListProps } from '../types';
 
 const ResultsList = ({
   sendSearchRequest,

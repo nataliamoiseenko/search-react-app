@@ -2,11 +2,8 @@ import { useContext } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { DataContext } from '../App';
+import { PaginationProps } from '../types';
 import '../App.css';
-
-type PaginationProps = {
-  paginationHandler: (requestUrl: string | null) => void;
-};
 
 const Pagination = ({ paginationHandler }: PaginationProps) => {
   const {

@@ -1,13 +1,5 @@
 import { GoChevronRight } from 'react-icons/go';
-
-type ResultItemProps = {
-  item: {
-    name?: string;
-    title?: string;
-    url: string;
-  };
-  getDetailedInfo: (requestUrl: string) => void;
-};
+import { ResultItemProps } from '../types';
 
 const ResultItem = ({ item, getDetailedInfo }: ResultItemProps) => (
   <li className="result__item">
