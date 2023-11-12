@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent } from 'react';
+import { ChangeEvent, SyntheticEvent } from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 import '../App.css';
 import { API_OPTIONS } from '../consts';
@@ -11,49 +11,43 @@ type SearchFormProps = {
   isLoading: boolean;
 };
 
-class SearchForm extends React.Component<SearchFormProps> {
-  constructor(props: SearchFormProps) {
-    super(props);
-  }
-
-  onSubmitHandler = async (event: SyntheticEvent) => {
-    if (!this.props.input.trim()) return;
+const SearchForm = ({
+  input,
+  updateInput,
+  sendSearchRequest,
+  onChangeHandler,
+  isLoading,
+}: SearchFormProps) => {
+  const onSubmitHandler = async (event: SyntheticEvent) => {
+    if (!input.trim()) return;
 
     event.preventDefault();
-    this.props.sendSearchRequest();
+    sendSearchRequest();
   };
 
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.onSubmitHandler}>
-          <input
-            placeholder="Enter your search request"
-            value={this.props.input}
-            onChange={this.props.updateInput}
-          />
+  return (
+    <div>
+      <form onSubmit={onSubmitHandler}>
+        <input
+          placeholder="Enter your search request"
+          value={input}
+          onChange={updateInput}
+        />
 
-          <select
-            onChange={this.props.onChangeHandler}
-            disabled={this.props.isLoading}
-          >
-            {API_OPTIONS.map((el) => (
-              <option key={el} value={el}>
-                {el[0].toUpperCase() + el.slice(1)}
-              </option>
-            ))}
-          </select>
+        <select onChange={onChangeHandler} disabled={isLoading}>
+          {API_OPTIONS.map((el) => (
+            <option key={el} value={el}>
+              {el[0].toUpperCase() + el.slice(1)}
+            </option>
+          ))}
+        </select>
 
-          <button
-            type="submit"
-            disabled={this.props.isLoading || !this.props.input.trim()}
-          >
-            <RiSearchLine />
-          </button>
-        </form>
-      </div>
-    );
-  }
-}
+        <button type="submit" disabled={isLoading || !input.trim()}>
+          <RiSearchLine />
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default SearchForm;

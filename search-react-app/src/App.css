@@ -1,12 +1,14 @@
 #root {
+  width: 100%;
   max-width: 1280px;
   min-width: 450px;
+  padding: 0 20px;
   margin: 0 auto;
   text-align: center;
 }
 
 .header__logo {
-  position: fixed;
+  position: absolute;
   top: 30px;
   right: 30px;
   display: block;
@@ -69,6 +71,11 @@ ul li {
   list-style-type: none;
 }
 
+.result-list__container {
+  width: 100%;
+  max-width: 600px;
+}
+
 @keyframes rotating {
   from {
     -ms-transform: rotate(0deg);
@@ -84,4 +91,92 @@ ul li {
     -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.pagination__container {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination__button {
+  border-radius: 50%;
+  padding: 0.75em 1em;
+}
+
+.pagination__current {
+  border-radius: 50%;
+  padding: 0.75em 1.35em;
+  color: #a64300;
+  background-color: #f4f4f4;
+}
+
+.result__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.result__button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.5em 0.8em;
+  font-weight: 400;
+  color: #213547;
+  background-color: transparent;
+  border: none;
+}
+
+.result__button:hover {
+  text-decoration: underline;
+}
+
+.result__container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.result__container._open > div {
+  flex-basis: 50%;
+}
+
+.detail {
+  position: relative;
+  margin-bottom: 30px;
+  padding: 76px 16px 16px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+}
+
+.detail__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}
+
+.detail__left {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.detail__right {
+  margin-left: 12px;
+  font-size: 0.9rem;
+  text-align: justify;
+}
+
+.detail__button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border-radius: 50%;
+  padding: 0.75em 1em;
+  color: #a64300;
 }

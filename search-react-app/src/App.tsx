@@ -1,70 +1,143 @@
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { TbLoaderQuarter } from 'react-icons/tb';
-import './App.css';
 import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
 import Header from './components/Header';
 import ResultsList from './components/ResultsList';
 import SearchForm from './components/SearchForm';
+import DetailedInfo from './components/DetailedInfo';
+import './App.css';
 
-type AppState = {
-  input: string;
-  option: string;
+type SearchState = {
   result: [] | null;
-  isLoading: boolean;
+  count: number | null;
+  next: string | null;
+  previous: string | null;
 };
 
-class App extends React.Component<Record<string, never>, AppState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = {
-      input: localStorage.getItem(LOCAL_STORAGE_TITLE) || '',
-      option: API_OPTIONS[0],
-      result: null,
-      isLoading: false,
-    };
-  }
+type FormState = {
+  input: string;
+  option: string;
+};
 
-  updateInput = (e: ChangeEvent) =>
-    this.setState({ input: (e.target as HTMLInputElement).value });
+const App = () => {
+  const [formState, setFormState] = useState<FormState>({
+    input: localStorage.getItem(LOCAL_STORAGE_TITLE) || '',
+    option: API_OPTIONS[0],
+  });
 
-  sendSearchRequest = async () => {
-    this.setState({ isLoading: true });
-    localStorage.setItem(LOCAL_STORAGE_TITLE, this.state.input);
-    const result = await fetch(
-      `${BASE_URL}/${this.state.option}/?search=${this.state.input}`
-    );
-    const searchResult = await result.json();
-    this.setState({
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [searchState, setSearchState] = useState<SearchState>({
+    result: null,
+    count: null,
+    next: null,
+    previous: null,
+  });
+
+  const [detailedInfo, setDetailedInfo] = useState({
+    isOpen: false,
+    data: {},
+  });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const updateInput = (e: ChangeEvent) =>
+    setFormState({ ...formState, input: (e.target as HTMLInputElement).value });
+
+  const sendSearchRequest = async (requestUrl: string | null = null) => {
+    setLoading(true);
+    if (!requestUrl) localStorage.setItem(LOCAL_STORAGE_TITLE, formState.input);
+
+    const requestUrlString = requestUrl
+      ? requestUrl
+      : `${BASE_URL}/${formState.option}/?search=${formState.input}`;
+
+    const queryParamsObj = new URLSearchParams(requestUrlString.split('?')[1]);
+    setSearchParams(queryParamsObj);
+
+    const response = await fetch(requestUrlString);
+    const { results: result, count, next, previous } = await response.json();
+    setFormState({
+      ...formState,
       input: '',
-      result: searchResult.results,
-      isLoading: false,
+    });
+
+    setLoading(false);
+
+    setSearchState({
+      result,
+      count,
+      next,
+      previous,
     });
   };
 
-  onChangeHandler = (e: ChangeEvent) =>
-    this.setState({ option: (e.target as HTMLSelectElement).value });
+  const getDetailedInfo = async (url: string) => {
+    setLoading(true);
+    searchParams.append('detail', 'true');
+    setSearchParams(searchParams);
 
-  render() {
-    return (
-      <>
-        <Header />
-        <div className="container">
-          <div className={this.state.isLoading ? 'blured' : ''}>
-            <SearchForm
-              input={this.state.input}
-              updateInput={this.updateInput}
-              sendSearchRequest={this.sendSearchRequest}
-              onChangeHandler={this.onChangeHandler}
-              isLoading={this.state.isLoading}
+    const response = await fetch(url);
+    const processedResponse = await response.json();
+    setDetailedInfo({
+      isOpen: true,
+      data: processedResponse,
+    });
+    setLoading(false);
+  };
+
+  const closeDetailedInfo = () => {
+    setDetailedInfo({ isOpen: false, data: {} });
+    searchParams.delete('detail', 'true');
+    setSearchParams(searchParams);
+  };
+
+  const onChangeHandler = (e: ChangeEvent) =>
+    setFormState({
+      ...formState,
+      option: (e.target as HTMLSelectElement).value,
+    });
+
+  return (
+    <>
+      <Header />
+      <div className="container">
+        <div className={loading ? 'blured' : ''}>
+          <SearchForm
+            input={formState.input}
+            updateInput={updateInput}
+            sendSearchRequest={sendSearchRequest}
+            onChangeHandler={onChangeHandler}
+            isLoading={loading}
+          />
+
+          <div
+            className={`result__container ${
+              detailedInfo.isOpen ? '_open' : ''
+            }`}
+          >
+            <ResultsList
+              result={searchState.result}
+              next={searchState.next}
+              previous={searchState.previous}
+              sendSearchRequest={sendSearchRequest}
+              getDetailedInfo={getDetailedInfo}
             />
-            <ResultsList result={this.state.result} />
-          </div>
 
-          {this.state.isLoading && <TbLoaderQuarter className="loader-icon" />}
+            {detailedInfo.isOpen && (
+              <DetailedInfo
+                closeDetailedInfo={closeDetailedInfo}
+                detailedInfo={detailedInfo.data}
+              />
+            )}
+          </div>
         </div>
-      </>
-    );
-  }
-}
+
+        {loading && <TbLoaderQuarter className="loader-icon" />}
+      </div>
+    </>
+  );
+};
 
 export default App;

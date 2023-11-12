@@ -10,3 +10,5 @@ export const API_OPTIONS = [
 ];
 
 export const LOCAL_STORAGE_TITLE = 'sw_search_input';
+
+export const RESULTS_PER_PAGE = 10;

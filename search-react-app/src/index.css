@@ -32,6 +32,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
+  justify-content: center;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -41,6 +42,8 @@ body {
 }
 
 h1 {
+  margin: 0 auto;
+  width: fit-content;
   margin-bottom: 40px;
   padding: 10px 15px;
   font-size: 2em;
@@ -58,14 +61,10 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
 }
 button:hover {
   border-color: #a64300;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
