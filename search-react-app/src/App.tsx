@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, createContext } from 'react';
+import { ChangeEvent, useState, createContext, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TbLoaderQuarter } from 'react-icons/tb';
 import { BASE_URL, API_OPTIONS, LOCAL_STORAGE_TITLE } from './consts';
@@ -34,6 +34,10 @@ const App = () => {
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    sendSearchRequest(`${BASE_URL}/${API_OPTIONS[0]}`);
+  }, []);
 
   const updateInput = (e: ChangeEvent) =>
     setFormState({ ...formState, input: (e.target as HTMLInputElement).value });
