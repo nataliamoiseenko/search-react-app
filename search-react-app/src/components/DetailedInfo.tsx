@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-
-type DetailedInfoProps = {
-  closeDetailedInfo: () => void;
-  detailedInfo: Record<string, never | string | []>;
-};
+import { DetailedInfoProps } from '../types';
 
 const DetailedInfo = ({
   closeDetailedInfo,

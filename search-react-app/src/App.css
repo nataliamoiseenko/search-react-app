@@ -119,6 +119,17 @@ ul li {
   justify-content: center;
   align-items: center;
   gap: 30px;
+  background-color: #36aeb3;
+  color: #fff;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 1.5rem) 0,
+    100% 50%,
+    calc(100% - 1.5rem) 100%,
+    calc(100% - 1.5rem) calc(100% + 1rem),
+    0 calc(100% + 1rem)
+  );
+  font-weight: 700;
 }
 
 .result__button {
